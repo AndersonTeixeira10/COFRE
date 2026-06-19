@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Nexus Vault | Cofre de Senhas e Gastos</title>
+
+  <link rel="stylesheet" href="style.css" />
+  <link rel="manifest" href="manifest.json" />
+
+  <meta name="theme-color" content="#050505" />
+  <meta name="description" content="Cofre criptografado localmente da Nexus Connect para senhas e gastos" />
+</head>
+
+<body>
+  <main class="app">
+
+    <header class="topo">
+      <div class="brand">
+        <div class="logo-code" aria-label="Nexus Connect - Rede Inteligente">
+          <div class="logo-symbol" aria-hidden="true">
+            <svg viewBox="0 0 220 220" xmlns="http://www.w3.org/2000/svg" role="img">
+              <polygon
+                points="110,18 190,64 190,156 110,202 30,156 30,64"
+                fill="none"
+                stroke="#ff8a1f"
+                stroke-width="14"
+                stroke-linejoin="round"
+              />
+
+              <circle cx="110" cy="18" r="16" fill="#ff9a3d" />
+              <circle cx="30" cy="156" r="16" fill="#e86f13" />
+              <circle cx="190" cy="156" r="16" fill="#e86f13" />
+
+              <line x1="110" y1="34" x2="110" y2="78" stroke="#9b6334" stroke-width="10" stroke-linecap="round" />
+              <line x1="110" y1="142" x2="110" y2="184" stroke="#9b6334" stroke-width="10" stroke-linecap="round" />
+
+              <line x1="57" y1="86" x2="83" y2="101" stroke="#9b6334" stroke-width="10" stroke-linecap="round" />
+              <line x1="163" y1="86" x2="137" y2="101" stroke="#9b6334" stroke-width="10" stroke-linecap="round" />
+
+              <line x1="57" y1="134" x2="83" y2="119" stroke="#9b6334" stroke-width="10" stroke-linecap="round" />
+              <line x1="163" y1="134" x2="137" y2="119" stroke="#9b6334" stroke-width="10" stroke-linecap="round" />
+
+              <circle cx="110" cy="110" r="36" fill="#ff8a1f" />
+            </svg>
+          </div>
+
+          <div class="logo-text">
+            <div class="logo-title">
+              <span class="logo-title-white">Nexus</span>
+              <span class="logo-title-orange">Connect</span>
+            </div>
+
+            <div class="logo-subtitle">REDE INTELIGENTE</div>
+            <div class="logo-tagline">Nexus Vault</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="header-text">
+        <h1>Cofre Seguro</h1>
+        <p>Senhas e gastos criptografados localmente no seu aparelho</p>
+        <span class="badge">AES-GCM · Offline · Privado</span>
+      </div>
+    </header>
+
+    <section id="telaConfigurar" class="card">
+      <div class="card-header">
+        <span class="icon-circle">🔐</span>
+        <div>
+          <h2>Criar cofre</h2>
+          <p>Defina uma senha mestra para proteger seus dados.</p>
+        </div>
+      </div>
+
+      <label for="novaSenhaMestra">Senha mestra</label>
+      <input type="password" id="novaSenhaMestra" placeholder="Digite uma senha forte" autocomplete="new-password" />
+
+      <label for="confirmarSenhaMestra">Confirmar senha mestra</label>
+      <input type="password" id="confirmarSenhaMestra" placeholder="Repita a senha" autocomplete="new-password" />
+
+      <button onclick="criarCofre()">Criar cofre seguro</button>
+
+      <div class="security-note">
+        <strong>Atenção:</strong> a senha mestra não é recuperável. Se você esquecer, não será possível abrir o cofre ou restaurar backups antigos.
+      </div>
+    </section>
+
+    <section id="telaLogin" class="card hidden">
+      <div class="card-header">
+        <span class="icon-circle">🛡️</span>
+        <div>
+          <h2>Desbloquear cofre</h2>
+          <p>Digite sua senha mestra para acessar seus dados.</p>
+        </div>
+      </div>
+
+      <label for="senhaMestraLogin">Senha mestra</label>
+      <input type="password" id="senhaMestraLogin" placeholder="Senha mestra" autocomplete="current-password" />
+
+      <button onclick="desbloquearCofre()">Entrar no cofre</button>
+    </section>
+
+    <section id="telaCofre" class="hidden">
+      <div class="barra">
+        <div>
+          <h2>Meu cofre</h2>
+          <p>Gerencie senhas e gastos com segurança.</p>
+        </div>
+
+        <button class="secundario pequeno" onclick="bloquearCofre()">Bloquear</button>
+      </div>
+
+      <nav class="abas">
+        <button id="btnAbaSenhas" class="aba ativa" onclick="abrirAba('senhas')">🔑 Senhas</button>
+        <button id="btnAbaGastos" class="aba" onclick="abrirAba('gastos')">💰 Gastos</button>
+      </nav>
+
+      <section id="abaSenhas">
+        <section class="card">
+          <div class="card-header">
+            <span class="icon-circle">➕</span>
+            <div>
+              <h3>Adicionar nova senha</h3>
+              <p>Cadastre um novo acesso no cofre.</p>
+            </div>
+          </div>
+
+          <label for="servico">Serviço</label>
+          <input type="text" id="servico" placeholder="Ex: Gmail, Banco, Instagram" />
+
+          <label for="usuario">Usuário/E-mail</label>
+          <input type="text" id="usuario" placeholder="Ex: usuario@email.com" />
+
+          <label for="senha">Senha</label>
+          <input type="password" id="senha" placeholder="Digite ou gere uma senha" />
+
+          <label for="url">URL</label>
+          <input type="url" id="url" placeholder="https://..." />
+
+          <label for="observacoes">Observações</label>
+          <textarea id="observacoes" placeholder="Anotações opcionais"></textarea>
+
+          <div class="botoes">
+            <button class="secundario" onclick="gerarSenha()">Gerar senha</button>
+            <button onclick="adicionarSenha()">Salvar senha</button>
+          </div>
+        </section>
+
+        <section class="card">
+          <div class="card-header">
+            <span class="icon-circle">📁</span>
+            <div>
+              <h3>Itens salvos</h3>
+              <p>Pesquise, selecione e exporte suas credenciais com segurança.</p>
+            </div>
+          </div>
+
+          <div class="search-box">
+            <input
+              type="search"
+              id="busca"
+              placeholder="Buscar por serviço, usuário, URL ou observação..."
+              oninput="renderizarListaSenhas()"
+            />
+          </div>
+
+          <div class="toolbar">
+            <button class="secundario mini" onclick="selecionarTodosFiltrados()">Selecionar filtrados</button>
+            <button class="secundario mini" onclick="limparSelecao()">Limpar seleção</button>
+          </div>
+
+          <div class="toolbar">
+            <button class="mini" onclick="exportarTudo()">Exportar tudo</button>
+            <button class="mini" onclick="exportarSelecionadas()">Exportar selecionadas</button>
+          </div>
+
+          <div class="toolbar">
+            <button class="secundario mini" onclick="document.getElementById('arquivoBackup').click()">Importar backup</button>
+            <button class="secundario mini" onclick="exportarSenhas()">Exportar só senhas</button>
+          </div>
+
+          <input
+            type="file"
+            id="arquivoBackup"
+            accept=".json,application/json"
+            class="hidden"
+            onchange="importarBackup(event)"
+          />
+
+          <div class="contador" id="contadorItens">Nenhum item selecionado.</div>
+
+          <div id="listaSenhas" class="lista"></div>
+        </section>
+      </section>
+
+      <section id="abaGastos" class="hidden">
+
+        <section class="card">
+          <div class="card-header">
+            <span class="icon-circle">💰</span>
+            <div>
+              <h3>Adicionar gasto</h3>
+              <p>Registre despesas, assinaturas, contratos, compras e serviços.</p>
+            </div>
+          </div>
+
+          <label for="descricaoGasto">Descrição / Serviço</label>
+          <input type="text" id="descricaoGasto" placeholder="Ex: Chave Windows, Internet, Servidor VPS" />
+
+          <label for="categoriaGastoSelect">Categoria existente</label>
+          <select id="categoriaGastoSelect">
+            <option value="">Selecione uma categoria</option>
+          </select>
+
+          <label for="novaCategoriaGasto">Nova categoria</label>
+          <input type="text" id="novaCategoriaGasto" placeholder="Preencha somente se for uma categoria nova" />
+
+          <div class="security-note">
+            Use <strong>categoria existente</strong> ou <strong>nova categoria</strong>. Nunca as duas ao mesmo tempo.
+          </div>
+
+          <label for="valorGasto">Valor unitário</label>
+          <input type="number" id="valorGasto" placeholder="Ex: 99.90" step="0.01" min="0" />
+
+          <label for="quantidadeGasto">Quantidade</label>
+          <input type="number" id="quantidadeGasto" placeholder="Ex: 1" step="1" min="1" value="1" />
+
+          <label for="dataGasto">Data inicial / contratação / compra</label>
+          <input type="date" id="dataGasto" />
+
+          <label for="tipoGasto">Tipo</label>
+          <select id="tipoGasto">
+            <option value="unico">Apenas uma vez</option>
+            <option value="mensal">Mensal</option>
+            <option value="anual">Anual</option>
+          </select>
+
+          <label for="statusManualGasto">Situação inicial das unidades</label>
+          <select id="statusManualGasto" onchange="alternarCamposPagadorInicial()">
+            <option value="pendente">Pendente</option>
+            <option value="pago">Pago</option>
+          </select>
+
+          <div id="boxPagadorInicial" class="hidden">
+            <label for="pagadorGastoSelect">Quem pagou? Pessoa existente</label>
+            <select id="pagadorGastoSelect">
+              <option value="">Selecione quem pagou</option>
+            </select>
+
+            <label for="novoPagadorGasto">Novo pagador</label>
+            <input type="text" id="novoPagadorGasto" placeholder="Preencha somente se for uma nova pessoa" />
+
+            <div class="security-note">
+              Use <strong>pagador existente</strong> ou <strong>novo pagador</strong>. Nunca os dois ao mesmo tempo.
+            </div>
+          </div>
+
+          <label for="observacoesGasto">Observações</label>
+          <textarea id="observacoesGasto" placeholder="Anotações opcionais"></textarea>
+
+          <button onclick="adicionarGasto()">Salvar gasto</button>
+        </section>
+
+        <section id="cardEditarGasto" class="card hidden">
+  <div class="card-header">
+    <span class="icon-circle">✏️</span>
+    <div>
+      <h3>Editar gasto</h3>
+      <p>Altere os dados principais do serviço/gasto salvo.</p>
+    </div>
+  </div>
+
+  <input type="hidden" id="editarGastoId" />
+
+  <label for="editarDescricaoGasto">Descrição / Serviço</label>
+  <input type="text" id="editarDescricaoGasto" placeholder="Ex: Chave Windows, Internet, Servidor VPS" />
+
+  <label for="editarCategoriaGastoSelect">Categoria existente</label>
+  <select id="editarCategoriaGastoSelect">
+    <option value="">Selecione uma categoria</option>
+  </select>
+
+  <label for="editarNovaCategoriaGasto">Nova categoria</label>
+  <input type="text" id="editarNovaCategoriaGasto" placeholder="Preencha somente se for uma categoria nova" />
+
+  <div class="security-note">
+    Use <strong>categoria existente</strong> ou <strong>nova categoria</strong>. Nunca as duas ao mesmo tempo.
+  </div>
+
+  <label for="editarValorGasto">Valor atual / novo valor unitário</label>
+  <input type="number" id="editarValorGasto" placeholder="Ex: 99.90" step="0.01" min="0" />
+
+  <div class="security-note">
+    Ao alterar o valor, você poderá escolher se deseja aplicar o novo valor em todas as unidades ou apenas nas próximas unidades.
+  </div>
+
+  <label for="editarDataGasto">Data inicial / contratação / compra</label>
+  <input type="date" id="editarDataGasto" />
+
+  <label for="editarTipoGasto">Tipo</label>
+  <select id="editarTipoGasto">
+    <option value="unico">Apenas uma vez</option>
+    <option value="mensal">Mensal</option>
+    <option value="anual">Anual</option>
+  </select>
+
+  <label for="editarStatusGasto">Status das unidades</label>
+  <select id="editarStatusGasto">
+    <option value="manter">Manter status atual</option>
+    <option value="pendente">Marcar todas como pendentes</option>
+    <option value="pago">Marcar todas como pagas</option>
+  </select>
+
+  <div id="boxEditarPagadorGasto" class="hidden">
+    <label for="editarPagadorGastoSelect">Quem pagou? Pessoa existente</label>
+    <select id="editarPagadorGastoSelect">
+      <option value="">Selecione quem pagou</option>
+    </select>
+
+    <label for="editarNovoPagadorGasto">Novo pagador</label>
+    <input type="text" id="editarNovoPagadorGasto" placeholder="Preencha somente se for uma nova pessoa" />
+
+    <div class="security-note">
+      Obrigatório quando marcar todas como pagas.
+    </div>
+  </div>
+
+  <label for="editarObservacoesGasto">Observações</label>
+  <textarea id="editarObservacoesGasto" placeholder="Anotações opcionais"></textarea>
+
+  <div class="botoes">
+    <button class="secundario" onclick="cancelarEdicaoGasto()">Cancelar</button>
+    <button onclick="salvarEdicaoGasto()">Salvar alterações</button>
+  </div>
+</section>
+
+        <section class="card">
+          <div class="card-header">
+            <span class="icon-circle">📊</span>
+            <div>
+              <h3>Insights de gastos</h3>
+              <p>Resumo automático por status, mês e vencimentos.</p>
+            </div>
+          </div>
+
+          <div class="insights-grid">
+            <div class="insight pago">
+              <span>Total pago</span>
+              <strong id="insightTotalPago">R$ 0,00</strong>
+            </div>
+
+            <div class="insight pendente">
+              <span>Total pendente</span>
+              <strong id="insightTotalPendente">R$ 0,00</strong>
+            </div>
+
+            <div class="insight vencido">
+              <span>Total vencido</span>
+              <strong id="insightTotalVencido">R$ 0,00</strong>
+            </div>
+
+            <div class="insight neutro">
+              <span>Total geral</span>
+              <strong id="insightTotalGeral">R$ 0,00</strong>
+            </div>
+
+            <div class="insight pago">
+              <span>Pago este mês</span>
+              <strong id="insightPagoMes">R$ 0,00</strong>
+            </div>
+
+            <div class="insight pendente">
+              <span>Vencendo este mês</span>
+              <strong id="insightVencendoMes">R$ 0,00</strong>
+            </div>
+
+            <div class="insight vencido">
+              <span>Vencido este mês</span>
+              <strong id="insightVencidoMes">R$ 0,00</strong>
+            </div>
+
+            <div class="insight neutro">
+              <span>Total do mês</span>
+              <strong id="insightTotalMes">R$ 0,00</strong>
+            </div>
+
+            <div class="insight neutro">
+              <span>Serviços cadastrados</span>
+              <strong id="insightQuantidadeServicos">0</strong>
+            </div>
+
+            <div class="insight neutro">
+              <span>Unidades cadastradas</span>
+              <strong id="insightQuantidadeUnidades">0</strong>
+            </div>
+          </div>
+        </section>
+
+        <section class="card">
+          <div class="card-header">
+            <span class="icon-circle">🧮</span>
+            <div>
+              <h3>Calculadora de divisão</h3>
+              <p>Divida gastos gerais ou apenas valores do mês.</p>
+            </div>
+          </div>
+
+          <label for="quantidadePessoasDivisao">Quantidade de pessoas</label>
+          <input
+            type="number"
+            id="quantidadePessoasDivisao"
+            min="1"
+            step="1"
+            value="2"
+            oninput="calcularDivisaoGastos()"
+          />
+
+          <label for="tipoDivisaoGastos">Dividir quais gastos?</label>
+          <select id="tipoDivisaoGastos" onchange="calcularDivisaoGastos()">
+            <option value="geral">Total geral</option>
+            <option value="pago">Pagos</option>
+            <option value="pendente">Pendentes</option>
+            <option value="vencido">Vencidos</option>
+            <option value="mes">Total do mês</option>
+            <option value="pagoMes">Pago este mês</option>
+            <option value="vencendoMes">Vencendo este mês</option>
+            <option value="vencidoMes">Vencido este mês</option>
+          </select>
+
+          <div class="resultado-divisao">
+            <span>Valor total selecionado</span>
+            <strong id="valorTotalDivisao">R$ 0,00</strong>
+
+            <span>Valor por pessoa</span>
+            <strong id="valorPorPessoaDivisao">R$ 0,00</strong>
+          </div>
+        </section>
+
+        <section class="card">
+          <div class="card-header">
+            <span class="icon-circle">📋</span>
+            <div>
+              <h3>Gastos salvos</h3>
+              <p>Consulte, pague unidades e adicione novas quantidades.</p>
+            </div>
+          </div>
+
+          <div class="search-box">
+            <input
+              type="search"
+              id="buscaGastos"
+              placeholder="Buscar por descrição, categoria, tipo, status, pagador ou observação..."
+              oninput="renderizarListaGastos()"
+            />
+          </div>
+
+<div class="filtros-pagador-box">
+  <label for="filtroPagadorGastos">Filtrar por pagador</label>
+  <select id="filtroPagadorGastos" onchange="renderizarListaGastos()">
+    <option value="">Todos os pagadores</option>
+  </select>
+
+  <label for="filtroPeriodoPagadorGastos">Período de pagamento</label>
+  <select id="filtroPeriodoPagadorGastos" onchange="renderizarListaGastos()">
+    <option value="todos">Todos</option>
+    <option value="mes">Este mês</option>
+    <option value="personalizado">Período personalizado</option>
+  </select>
+
+  <div class="filtros-data-pagamento">
+    <div>
+      <label for="filtroDataPagamentoInicio">Pagamento de</label>
+      <input type="date" id="filtroDataPagamentoInicio" onchange="renderizarListaGastos()" />
+    </div>
+
+    <div>
+      <label for="filtroDataPagamentoFim">Pagamento até</label>
+      <input type="date" id="filtroDataPagamentoFim" onchange="renderizarListaGastos()" />
+    </div>
+  </div>
+
+  <div class="insights-pagador-grid">
+    <div class="insight-pagador-card">
+      <span>Valor total pago</span>
+      <strong id="insightFiltroTotalPago">R$ 0,00</strong>
+    </div>
+
+    <div class="insight-pagador-card">
+      <span>Valor pago este mês</span>
+      <strong id="insightFiltroPagoMes">R$ 0,00</strong>
+    </div>
+  </div>
+</div>
+
+
+          <div class="toolbar">
+            <button class="mini" onclick="exportarTudo()">Exportar tudo</button>
+            <button class="secundario mini" onclick="document.getElementById('arquivoBackup').click()">Importar backup</button>
+          </div>
+
+          <div id="listaGastos" class="lista"></div>
+        </section>
+
+      </section>
+    </section>
+
+    <footer class="rodape">
+      <strong>Nexus Connect</strong>
+      <span>Nexus Vault · Cofre local criptografado</span>
+    </footer>
+
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>

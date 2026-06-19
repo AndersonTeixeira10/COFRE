@@ -1,0 +1,11 @@
+{
+  "name": "Nexus Vault",
+  "short_name": "Nexus Vault",
+  "description": "Cofre criptografado localmente da Nexus Connect para senhas e gastos",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#050505",
+  "theme_color": "#050505",
+  "orientation": "portrait",
+  "icons": []
+}
