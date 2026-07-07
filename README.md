@@ -187,10 +187,7 @@ app.js
 manifest.json
 ```
 
-## Privacidade
-
 Todos os dados são armazenados localmente no navegador do usuário. O projeto não envia informações para servidores externos.
-
 Nenhuma senha, gasto ou backup é transmitido pela internet pela aplicação.
 
 ## Possíveis melhorias futuras
