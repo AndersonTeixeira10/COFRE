@@ -18,7 +18,6 @@ A senha mestra não é armazenada e não pode ser recuperada. Ela é utilizada a
 - Login/desbloqueio do cofre
 - Cadastro de senhas por serviço
 - Armazenamento de:
-  - Serviço
   - Usuário ou e-mail
   - Senha
   - URL
