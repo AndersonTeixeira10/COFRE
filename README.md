@@ -178,7 +178,6 @@ Service Worker responsável pelo cache dos arquivos principais e funcionamento o
 ## Funcionamento offline
 
 O projeto possui suporte a Service Worker, permitindo que os arquivos principais sejam armazenados em cache para uso offline.
-
 Arquivos armazenados em cache:
 
 ```text
